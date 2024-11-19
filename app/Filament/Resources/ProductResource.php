@@ -28,6 +28,11 @@ class ProductResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
+                Forms\Components\Select::make('product_size_id')
+                    ->multiple()
+                    ->preload()
+                    ->relationship('productSize', 'name')
+                    ->default(null),
             ]);
     }
 
