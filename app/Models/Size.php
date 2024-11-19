@@ -13,4 +13,10 @@ class Size extends Model
         'name',
         'dimensions'
     ];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_size')->withPivot('price')->withTimestamps();
+        // return $this->belongsToMany(Product::class, 'product_size');
+    }
 }
