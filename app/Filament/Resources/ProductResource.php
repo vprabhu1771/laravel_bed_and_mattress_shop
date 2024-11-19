@@ -42,6 +42,14 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('productSize')
+                    ->label('Product Sizes')
+                    ->formatStateUsing(function ($record) {
+                        // return $record->productSize;
+                        return $record->productSize->map(function ($item) {
+                            return "{$item->name} ({$item->dimensions})";
+                        })->join(', ');
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
