@@ -14,9 +14,22 @@ class Product extends Model
         'description'
     ];
 
-    public function productSize()
+    /**
+    * Relationship to the ProductSize model.
+    */
+    public function productSizes()
     {
-        return $this->belongsToMany(Size::class, 'product_size')->withPivot('price')->withTimestamps();
+        return $this->hasMany(ProductSize::class, 'product_id');
+    }
+
+    /**
+    * Relationship to the Size model (through ProductSize).
+    */
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class, 'product_size')
+                    ->withPivot('price')
+                    ->withTimestamps();
         // return $this->belongsToMany(Size::class, 'product_size');
     }
 }
