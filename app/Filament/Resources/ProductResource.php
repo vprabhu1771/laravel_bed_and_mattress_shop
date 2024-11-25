@@ -31,7 +31,7 @@ class ProductResource extends Resource
                 Forms\Components\Select::make('product_size_id')
                     ->multiple()
                     ->preload()
-                    ->relationship('productSize', 'name')
+                    ->relationship('sizes', 'name')
                     ->default(null),
             ]);
     }
@@ -42,12 +42,12 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('productSize')
+                Tables\Columns\TextColumn::make('sizes')
                     ->label('Product Sizes')
                     ->formatStateUsing(function ($record) {
-                        // return $record->productSize;
-                        return $record->productSize->map(function ($item) {
-                            return "{$item->name} ({$item->dimensions})";
+                        // return $record->sizes;
+                        return $record->sizes->map(function ($item) {
+                            return "{$item->name} ({$item->dimensions}) ({$item->pivot->price})";
                         })->join(', ');
                     }),
                 Tables\Columns\TextColumn::make('created_at')
@@ -75,7 +75,7 @@ class ProductResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\SizesRelationManager::class
         ];
     }
 
