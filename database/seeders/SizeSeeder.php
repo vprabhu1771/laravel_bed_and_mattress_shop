@@ -15,18 +15,11 @@ class SizeSeeder extends Seeder
     public function run(): void
     {
         $sizes= [
-            [
-                'name' => 'Single', 
-                'dimensions' => '6x3 ft'
-            ],
-            [
-                'name' => 'Queen', 
-                'dimensions' => '6.5x5 ft'
-            ],
-            [
-                'name' => 'King', 
-                'dimensions' => '7x6 ft'
-            ]
+            ['name' => 'Single'],
+            ['name' => 'Double'],
+            ['name' => 'Queen'],
+            ['name' => 'King'],
+            ['name' => 'Custom'],
         ];
 
         foreach ($sizes as $row)
