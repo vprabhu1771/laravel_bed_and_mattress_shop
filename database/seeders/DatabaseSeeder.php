@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             // ProductSeeder::class,
             SizeSeeder::class,
             UnitSeeder::class,
+            ThicknessSeeder::class,
         ]);
     }
 }
