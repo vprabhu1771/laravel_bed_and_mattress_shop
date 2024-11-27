@@ -16,6 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
 
+use App\Models\Size;
+
+use App\Models\Thickness;
+
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
@@ -35,6 +39,29 @@ class ProductResource extends Resource
                     ->maxLength(255)
                     ->default(null),
                 Forms\Components\RichEditor::make('description')
+                    ->columnSpanFull(),
+                Forms\Components\Repeater::make('variants')
+                    ->relationship()
+                    ->schema([
+                        Forms\Components\Select::make('size_id')
+                            ->label('Size')
+                            ->options(Size::all()->pluck('name', 'id'))
+                            ->required(),
+                        Forms\Components\Select::make('thickness_id')
+                            ->label('Thickness')
+                            ->options(Thickness::all()->pluck('value_in_inches', 'id'))
+                            ->required(),
+                        Forms\Components\TextInput::make('dimension_in_inches'),
+                        Forms\Components\TextInput::make('dimension_in_feet'),
+                        Forms\Components\TextInput::make('dimension_in_cm'),
+                        Forms\Components\TextInput::make('product_variant_code'),
+                        Forms\Components\TextInput::make('price')->required(),
+                    ])
+                    ->reorderable(true)
+                    ->reorderableWithButtons()
+                    // ->collapsible()
+                    ->cloneable()
+                    ->columns(7)
                     ->columnSpanFull(),
             ]);
     }
