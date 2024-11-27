@@ -19,4 +19,22 @@ class MattressController extends Controller
         return view('frontend/mattress/list/type1', $data);
     }
 
+    // Mattress Detail
+    public function show($id)
+    {
+        try {
+            
+            $data = [
+                'product' => Product::findOrFail($id),                
+            ];
+
+            // dd($data);
+
+            return view('frontend/mattress/detail/type1', $data);
+        } catch (ModelNotFoundException $e) {
+            // Handle the case where the product is not found
+            return redirect()->route('products.index')->with('error', 'Product not found.');
+        }
+    }
+
 }

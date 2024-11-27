@@ -30,7 +30,7 @@ Mattress List
     <div class="row">
         @foreach ($product as $item)
             <div class="col-md-4 mb-4">
-                <a href="/products/{{ $item->id }}">
+                <a href="/mattress/{{ $item->id }}">
                     <div class="card">
                         <img src="#" class="card-img-top" alt="{{ $item->name }}">
                         <div class="card-body">
