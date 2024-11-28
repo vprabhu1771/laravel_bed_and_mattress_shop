@@ -56,7 +56,7 @@
 
                 <!-- Mattress Size -->
                 <div class="product-options">
-                    <label for="size" class="form-label">Select Mattress Size</label>
+                    <label for="size" class="form-label">Step 1 Mattress Size</label>
                     <div class="btn-group d-block" role="group" aria-label="Mattress Sizes">
                         @foreach($sizes as $size)
                             <input type="radio" 
@@ -74,7 +74,7 @@
 
                 <!-- Unit of Measurement -->
                 <div class="product-options">
-                    <label for="unit" class="form-label">Select Unit of Measurement</label>
+                    <label for="unit" class="form-label">Step 2 Unit of Measurement</label>
                     <select class="form-select" id="unit" name="unit">
                         @foreach($units as $unit)
                             <option value="{{ $unit->name }}">{{ $unit->name }}</option>
@@ -92,7 +92,7 @@
 
                 <!-- Mattress Thickness -->
                 <div class="product-options">
-                    <label for="thickness" class="form-label">Select Mattress Thickness</label>
+                    <label for="thickness" class="form-label">Step 4 Mattress Thickness</label>
                     <select class="form-select" id="thickness" name="thickness">
                         @foreach($thicknesses as $thickness)
                             <option value="{{ $thickness->id }}" 
@@ -150,6 +150,9 @@
 
                     // Populate the product dimensions dropdown
                     const productDimensionsDropdown = $('#product_dimensions');
+
+                    const unitSelector = $('#unit');
+
                     productDimensionsDropdown.empty(); // Clear previous options
 
                     // Check if there are variants and update the price display
@@ -168,9 +171,91 @@
 
                             // Create an option element and append it to the dropdown
                             productDimensionsDropdown.append(
-                                `<option value="${variant.id}">${dimensionText}</option>`
+                                `<option 
+                                    value="${variant.id}"
+                                    data-inches="${dimensions.inches}" 
+                                    data-feet="${dimensions.feet}" 
+                                    data-cm="${dimensions.cm}">
+                                    ${dimensionText}
+                                </option>`
                             );
                         });
+
+                        // Listen for changes in the unit selector
+                        unitSelector.on('change', function () {
+                            const selectedUnit = $(this).val(); // Get selected unit
+                            console.log(selectedUnit);
+                            
+                            const selectedValue = productDimensionsDropdown.val();
+                            const selectedOption = productDimensionsDropdown.find(':selected');
+
+                            productDimensionsDropdown.find('option').each(function () {
+                                const option = $(this);
+
+                                if (selectedUnit === 'Inches' && option.data('inches')) {
+                                    option.text(`${option.data('inches')} inches`).removeClass('d-none');
+                                } else if (selectedUnit === 'Feet' && option.data('feet')) {
+                                    option.text(`${option.data('feet')} ft`).removeClass('d-none');
+                                } else if (selectedUnit === 'cm' && option.data('cm')) {
+                                    option.text(`${option.data('cm')} cm`).removeClass('d-none');
+                                } else {
+                                    option.addClass('d-none');
+                                }
+                            });
+
+                            // Restore the previously selected option after unit change
+                            const newSelectedOption = productDimensionsDropdown.find('option:not(.d-none)').filter(function () {
+                                return $(this).val() == selectedValue;
+                            }).first();
+
+                            if (newSelectedOption.length > 0) {
+                                newSelectedOption.prop('selected', true);
+                            } else {
+                                productDimensionsDropdown.find('option:not(.d-none)').first().prop('selected', true);
+                            }
+
+                            // Automatically trigger the change event to select the first visible option
+                            // productDimensionsDropdown.find('option:not(.d-none)').first().prop('selected', true).trigger('change');
+                        });
+
+                        // Trigger change on unit selector to initialize options
+                        unitSelector.trigger('change');
+
+                        // Listen for changes on the product dimensions dropdown
+                        $('#product_dimensions').on('change', function () {
+                            // Get the currently selected value
+                            const selectedOption = $(this).find(':selected'); // Get the selected <option> element
+
+                            const selectedValue = $(this).val(); // Get the selected option's value
+
+                            const inches = selectedOption.data('inches'); // Fetch the data-inches attribute
+                            const feet = selectedOption.data('feet'); // Fetch the data-feet attribute
+                            const cm = selectedOption.data('cm'); // Fetch the data-cm attribute
+                            
+                            console.log('Selected Product Dimension ID:', selectedValue);
+                            console.log(`Dimensions: Inches: ${inches}, Feet: ${feet}, CM: ${cm}`);
+
+                            // Optional: Find and log the corresponding variant details
+                            const selectedVariant = response.variants.find(
+                                (variant) => variant.id == selectedValue
+                            );
+
+                            // const selectedVariant = response.variants.find(v => v.id == selectedVariantId);
+
+                            if (selectedVariant) {
+                                console.log('Selected Variant Details:', selectedVariant);
+
+                                // Update the displayed price on the page
+                                const price = parseFloat(selectedVariant.price).toFixed(2); // Format the price
+                                $('#offer-price').text('₹' + price); // Update the price display
+                            }
+                        });
+
+                        // Automatically trigger the change event after populating the dropdown to handle the default selection
+                        if (response.variants.length > 0) {
+                            productDimensionsDropdown.val(response.variants[0].id).trigger('change');
+                        }
+
                     } else {
                         // Handle case where there are no variants
                         $('#offer-price').text('No variants available');
@@ -236,6 +321,17 @@
             } else {
                 $('#thicknessDetails').addClass('d-none');
             }
+        });
+
+        // Handle product dimensions dropdown changes
+        $('#product_dimensions').on('change', function () {
+            const selectedOption = $(this).find(':selected');
+            const selectedValue = $(this).val();
+            const inches = selectedOption.data('inches');
+            const feet = selectedOption.data('feet');
+            const cm = selectedOption.data('cm');
+
+            console.log(`Selected Dimension ID: ${selectedValue}, Inches: ${inches}, Feet: ${feet}, CM: ${cm}`);
         });
     });
 </script>
