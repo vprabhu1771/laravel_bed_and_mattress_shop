@@ -104,6 +104,17 @@
                         @endforeach
                     </select>
                 </div>
+
+                <!-- Quantity Input -->
+                <div class="product-options mt-4">
+                    <label for="quantity" class="form-label">Step 5 Quantity</label>
+                    <div class="input-group">
+                        <button type="button" id="decrease-qty" class="btn btn-outline-secondary">-</button>
+                        <input type="text" id="quantity" name="quantity" class="form-control text-center" value="1" min="1" readonly>
+                        <button type="button" id="increase-qty" class="btn btn-outline-secondary">+</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -117,6 +128,18 @@
 
 <script>
     $(document).ready(function () {
+
+        $('#increase-qty').click(function() {
+            let currentQty = parseInt($('#quantity').val());
+            $('#quantity').val(currentQty + 1);
+        });
+
+        $('#decrease-qty').click(function() {
+            let currentQty = parseInt($('#quantity').val());
+            if (currentQty > 1) {
+                $('#quantity').val(currentQty - 1);
+            }
+        });
 
         // Set the first option as selected for thickness and initialize the details
         function setInitialThicknessDetails() {
