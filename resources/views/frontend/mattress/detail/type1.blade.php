@@ -33,6 +33,9 @@
         color: #e63946;
         font-weight: bold;
     }
+    .btn {
+        margin-right: 10px; /* Optional: adds space between buttons */
+    }
 </style>
 
 <div class="container my-5">
@@ -112,6 +115,14 @@
                         <button type="button" id="decrease-qty" class="btn btn-outline-secondary">-</button>
                         <input type="text" id="quantity" name="quantity" class="form-control text-center" value="1" min="1" readonly>
                         <button type="button" id="increase-qty" class="btn btn-outline-secondary">+</button>
+                    </div>
+                </div>
+
+                <!-- Buy Now and Add to Cart Buttons -->
+                <div class="product-options mt-4">
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-primary w-48">Buy Now</button>
+                        <button type="button" class="btn btn-success w-48">Add to Cart</button>
                     </div>
                 </div>
 
